@@ -1,10 +1,17 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./App.css";
 
 const App = () => {
   const [todo, settodo] = useState("");
-  const [todos, settodos] = useState([]);
+  const [todos, settodos] = useState(() => {
+    const localData = localStorage.getItem("todos");
+    return localData ? JSON.parse(localData) : [];
+  });
   const [editId, seteditId] = useState(0);
+  useEffect(() => {
+    localStorage.setItem("todos", JSON.stringify(todos));
+  }, [todos]);
+
   const onChange = (e) => {
     settodo(e.target.value);
   };
