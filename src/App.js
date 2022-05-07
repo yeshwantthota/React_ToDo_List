@@ -1,13 +1,17 @@
 import React, { useState, useEffect } from "react";
 import "./App.css";
+import TodoList from "./components/TodoList";
+import TodoForm from "./components/TodoForm";
 
 const App = () => {
   const [todo, settodo] = useState("");
+  //we setting the initial value of todos list to the values stored in the localStorage.
   const [todos, settodos] = useState(() => {
     const localData = localStorage.getItem("todos");
     return localData ? JSON.parse(localData) : [];
   });
   const [editId, seteditId] = useState(0);
+  //useEffect gets activated whenever there is change in todos array.
   useEffect(() => {
     localStorage.setItem("todos", JSON.stringify(todos));
   }, [todos]);
@@ -49,22 +53,17 @@ const App = () => {
     <div className="App">
       <div className="container">
         <h1>ToDo List</h1>
-        <form className="todoFrom" onSubmit={handleSubmit}>
-          <input type="text" value={todo} onChange={onChange} />
-          <button>{editId ? "Edit" : "Go"}</button>
-        </form>
-
-        <ul className="allTodos">
-          {todos.map((t) => (
-            <li className="singleTodo">
-              <span className="todoText" key={t.id}>
-                {t.todo}
-              </span>
-              <button onClick={() => handleEdit(t.id)}>Edit</button>
-              <button onClick={() => handleDelete(t.id)}>Delete</button>
-            </li>
-          ))}
-        </ul>
+        <TodoForm
+          todo={todo}
+          onChange={onChange}
+          editId={editId}
+          handleSubmit={handleSubmit}
+        />
+        <TodoList
+          todos={todos}
+          handleDelete={handleDelete}
+          handleEdit={handleEdit}
+        />
       </div>
     </div>
   );
